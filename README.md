@@ -30,32 +30,30 @@ holds. When `LD = 1` it is fed the new `D` — it loads.
 
 <img src="images/circuit.png" width="760">
 
-The 2:1 MUX is itself made from gates we already built:
-
-```
-NL = NOT(LD)
-mux out = ( D AND LD )  OR  ( Q AND NL )
-```
+That selector is exactly the **[2:1 MUX module](../mux-2-to-1)** — wired with its select `S = LD`,
+its `I1 = D` (new data), and its `I0 = Q` (the value fed back). Inside, that MUX is just
+`NL = NOT(LD); out = (D AND LD) OR (Q AND NL)`.
 
 ---
 
 ## Building it on a breadboard
 
-It is **one D flip-flop board** plus a **2:1 load MUX** made from gate boards:
+It is now just **two boards**: a **2:1 MUX board** and a **D flip-flop board**.
 
 | Board | Build guide | Count |
 |:--|:--|:--:|
+| 2:1 MUX | [mux-2-to-1](../mux-2-to-1) | 1 |
 | D flip-flop | [flip-flop](../flip-flop) | 1 |
-| AND | [and](../and) | 2 |
-| OR  | [or](../or)   | 1 |
-| NOT | [not](../not) | 1 |
 
-<img src="images/wiring.png" width="900">
+<img src="images/wiring.png" width="820">
 
-Wire them as in the picture: `D` and `LD` into the "load" AND; `Q` (fed back) and `NOT(LD)` into the
-"hold" AND; both AND outputs into the OR; the OR output into the flip-flop's `D`; the shared `CLK`
-into the flip-flop. The flip-flop's `Q` is the output **and** the feedback. All boards share one
+Wire `D` into the MUX's `I1` ("1") input, the fed-back `Q` into its `I0` ("0") input, and `LD` into
+its select `S`; the MUX output goes to the flip-flop's `D`, and the shared `CLK` to the flip-flop's
+clock. The flip-flop's `Q` is the output **and** the feedback into the MUX. All boards share one
 **+5 V** rail and one **GND**.
+
+> The MUX board is itself `1 NOT + 2 AND + 1 OR` boards — see [mux-2-to-1](../mux-2-to-1). So a full
+> 1-bit register is `1 D flip-flop + 1 NOT + 2 AND + 1 OR`.
 
 > This is the cell the **8-bit register** repeats eight times — see [register-8bits](../register-8bits).
 
