@@ -43,7 +43,8 @@
   % ---------- Q output + hold feedback ----------
   \draw (11.0,4.7) -- (11.7,4.7) coordinate (qt) -- (13.6,4.7) node[ocirc]{} node[right]{$Q$};
   \fill (qt) circle (2.4pt);
-  \draw (qt) -- (11.7,6.6) -- (2.2,6.6) -- (2.2,2.6) -- (3.0,2.6);    % Q -> MUX '0' input
+  % drop down on the far left (clear of the D input lead) so the feedback never crosses D
+  \draw (qt) -- (11.7,6.6) -- (0.3,6.6) -- (0.3,2.6) -- (3.0,2.6);    % Q -> MUX '0' input
   \node[font=\scriptsize, anchor=south] at (6.9,6.64) {feedback: holds $Q$ when LD\,=\,0};
 
 \end{tikzpicture}

@@ -42,7 +42,8 @@
   % ---------- Q output + hold feedback ----------
   \draw (12.6,4.2) -- (13.3,4.2) coordinate (qt) -- (15.2,4.2) node[ocirc]{} node[right]{$Q$};
   \fill (qt) circle (2.2pt);
-  \draw (qt) -- (13.3,6.6) -- (2.2,6.6) -- (2.2,3.1) -- (3.0,3.1);              % Q -> MUX I0 (the "0" input)
+  % drop down on the far left (clear of the D input lead) so the feedback never crosses D
+  \draw (qt) -- (13.3,6.6) -- (0.3,6.6) -- (0.3,3.1) -- (3.0,3.1);              % Q -> MUX I0 (the "0" input)
   \node[font=\footnotesize,anchor=south] at (7.0,6.64){$Q$ feedback (hold, LD\,=\,0)};
 
   \node[anchor=north west,font=\footnotesize\itshape,text width=15.5cm] at (1.0,-2.2)
