@@ -1,0 +1,82 @@
+# 1-Bit Register
+
+A **register** is memory that holds a value until you tell it to change. This is the smallest one —
+it stores **one bit**. It is a **D flip-flop** with a **load enable** (`LD`) bolted on:
+
+- `LD = 1` → on the next clock edge, the bit **loads** the new data `D`.
+- `LD = 0` → the bit **holds** its value (it ignores `D`), even though `CLK` keeps ticking.
+
+That "hold even while the clock runs" behaviour is what makes it a register cell you can drop into a
+CPU: the clock goes to *everything*, but each register only changes when *its* `LD` is asserted.
+
+### Symbol
+
+<img src="images/symbol.png" width="360">
+
+---
+
+## How it works — a load MUX in front of a flip-flop
+
+A bare D flip-flop captures `D` on **every** clock edge. To make it hold, we put a **2:1
+multiplexer** in front of it that chooses what the flip-flop actually sees:
+
+```
+mux out = LD ? D : Q          (LD picks new data D, or the old value Q fed back)
+Q       = D-flip-flop( mux out )  on the clock edge
+```
+
+So when `LD = 0` the flip-flop is fed **its own output**, i.e. it reloads what it already had — it
+holds. When `LD = 1` it is fed the new `D` — it loads.
+
+<img src="images/circuit.png" width="760">
+
+The 2:1 MUX is itself made from gates we already built:
+
+```
+NL = NOT(LD)
+mux out = ( D AND LD )  OR  ( Q AND NL )
+```
+
+---
+
+## Building it on a breadboard
+
+It is **one D flip-flop board** plus a **2:1 load MUX** made from gate boards:
+
+| Board | Build guide | Count |
+|:--|:--|:--:|
+| D flip-flop | [flip-flop](../flip-flop) | 1 |
+| AND | [and](../and) | 2 |
+| OR  | [or](../or)   | 1 |
+| NOT | [not](../not) | 1 |
+
+<img src="images/wiring.png" width="900">
+
+Wire them as in the picture: `D` and `LD` into the "load" AND; `Q` (fed back) and `NOT(LD)` into the
+"hold" AND; both AND outputs into the OR; the OR output into the flip-flop's `D`; the shared `CLK`
+into the flip-flop. The flip-flop's `Q` is the output **and** the feedback. All boards share one
+**+5 V** rail and one **GND**.
+
+> This is the cell the **8-bit register** repeats eight times — see [register-8bits](../register-8bits).
+
+---
+
+## Standards and references
+
+- *Register (digital) / register with parallel load*, Wikipedia ([wikipedia.org](https://en.wikipedia.org/wiki/Hardware_register)).
+- M. M. Mano, *Digital Design*, Pearson (registers, register with load enable).
+- D. A. Patterson and J. L. Hennessy, *Computer Organization and Design* (register files).
+- T. L. Floyd, *Digital Fundamentals*, Pearson.
+
+---
+
+## Regenerating the diagrams
+
+```bash
+pdflatex circuit.tex
+pdflatex symbol.tex
+pdflatex wiring.tex
+pdftoppm -png -r 400 circuit.pdf images/circuit
+pdftoppm -png -r 400 symbol.pdf  images/symbol
+pdftoppm -png -r 300 wiring.pdf  images/wiring
+```
